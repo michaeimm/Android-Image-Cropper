@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -210,7 +211,7 @@ public final class CropImage {
 
     // Add all other intents
     chooserIntent.putExtra(
-        Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+        Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[0]));
 
     return chooserIntent;
   }
@@ -266,7 +267,7 @@ public final class CropImage {
       @NonNull PackageManager packageManager, String action, boolean includeDocuments) {
     List<Intent> intents = new ArrayList<>();
     Intent galleryIntent =
-        action == Intent.ACTION_GET_CONTENT
+            Objects.equals(action, Intent.ACTION_GET_CONTENT)
             ? new Intent(action)
             : new Intent(action, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     galleryIntent.setType("image/*");
@@ -328,7 +329,7 @@ public final class CropImage {
           }
         }
       }
-    } catch (PackageManager.NameNotFoundException e) {
+    } catch (PackageManager.NameNotFoundException ignore) {
     }
     return false;
   }
